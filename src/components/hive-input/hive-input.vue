@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: 'Введите текст...',
   invalid: false,
   integer: false,
-  step: 1,
+  step: 0.01,
 });
 
 type currentType = typeof props.modelValue;
@@ -94,7 +94,7 @@ const placeholderView = computed(() => (props.type === 'number' ? 'Введит�
     :type="type"
     :value="modelValue"
     :placeholder="placeholderView"
-    :step="integer ? '1' : step"
+    :step="integer ? 1 : step"
     :min="min"
     :max="max"
     @input="handleInput(($event.target as HTMLInputElement)?.value)"
