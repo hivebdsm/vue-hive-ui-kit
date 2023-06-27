@@ -51,3 +51,9 @@ export type Input<T> = (e: 'input', value: T) => void;
 export const onInput = <T>(emit: Input<T>, value: T) => {
   emit('input', value);
 };
+
+export type DataBound = (e: 'dataBound') => void;
+
+export const onDataBound = (emit: DataBound) => {
+  emit('dataBound');
+};

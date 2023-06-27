@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted } from 'vue';
-import { Mount, Unmount } from '../mixin/emits';
+import { Mount, Unmount } from '@/common/mixin/emits';
 
 export const useOnMount = (emit: Mount & Unmount) => {
   onMounted(() => {

@@ -238,6 +238,7 @@ onMounted(() => {
   line-height: 1.5;
   font-weight: 400;
 }
+
 .wrapper {
   display: flex;
   flex-direction: column;
