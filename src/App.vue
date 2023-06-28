@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import WidgetWrapper from '@/WidgetWrapper.vue';
-import { HiveButton, HiveInput, HiveLoader, HiveTextarea } from '.';
+import { HiveButton, HiveInput, HiveLoader, HiveDialog, HiveTextarea } from '.';
 
 const text = ref('text');
 const num = ref(0);
+const isOpenModal = ref(false);
 
 const handleText = () => {
   console.log('click');
@@ -22,7 +23,7 @@ const handleR = () => {
 </script>
 
 <template>
-  <hive-loader />
+  <hive-loader :visible="false" />
 
   <div class="app">
     <div class="wrapper">
@@ -52,10 +53,29 @@ const handleR = () => {
         <hive-button title="Classes" :class="'test'" @click="handleNum" />
 
         <hive-input v-model="text" />
-        <hive-input  v-model="num" type="number" />
-        <hive-input  v-model="num" type="number" :step="1" />
-        <hive-input  v-model="num" type="text" integer :min="5" :max="6"/>
+        <hive-input v-model="num" type="number" />
+        <hive-input v-model="num" type="number" :step="1" />
+        <hive-input v-model="num" type="text" integer :min="5" :max="6" />
         <hive-input v-model="num" :mask="/^\d+$/" />
+      </widget-wrapper>
+
+      <!-- Modal -->
+      <widget-wrapper title="Modal">
+        <hive-button @click="isOpenModal = true" />
+        
+        <hive-dialog v-model="isOpenModal">
+          <template v-slot:header>
+            <hive-button title="close" />
+          </template>
+
+          <hive-input v-model="text" />
+          <hive-button />
+          Hello
+
+          <template v-slot:footer>
+            <hive-button title="close" />
+          </template>
+        </hive-dialog>
       </widget-wrapper>
     </div>
   </div>
