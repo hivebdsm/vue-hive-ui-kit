@@ -1,11 +1,7 @@
 <script lang="ts" setup>
 import { CommonProps } from '@/common/mixin/props';
 
-<<<<<<< HEAD
 export interface Props extends CommonProps {
-=======
-export interface HiveLoaderProps extends CommonProps {
->>>>>>> 36d9bf4 (rebase: fix bug)
   visible?: boolean;
 }
 
