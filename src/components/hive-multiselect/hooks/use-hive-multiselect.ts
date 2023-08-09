@@ -1,18 +1,14 @@
 import { type ComputedRef, ref, type Ref, watch } from 'vue';
-import type { ValueType } from '@/common/types/valueType';
-import useDataContainer, {
-  createUnknownNode,
-  type DataContainer,
-  type DataContainerNode,
-  UNKNOWN_KEY,
-} from '@/common/hooks/use-data-container';
-import useSearch from '@/common/hooks/use-search';
+import type { Value } from '@/common/types/value';
+import { useDataContainer, createUnknownNode } from '@/common/hooks/use-data-container';
+import { DataContainer, DataContainerNode, DataContainerNodeWithRaw } from '@/common/types/data-container';
+import { useSearch } from '@/common/hooks/use-search';
 import useFilter, { CompareMode } from '@/common/hooks/use-filter';
 
 type OptionType = string | number | Record<string, unknown>;
 type OptionsType = Array<OptionType> | Record<string, OptionType>;
-type CurrentValueType = Ref<ValueType[]>;
-type ActiveValueType = Ref<ValueType | null>;
+type CurrentValueType = Ref<Value[]>;
+type ActiveValueType = Ref<Value | null>;
 type FilteredOptionsType = ComputedRef<DataContainer<OptionType>>;
 
 interface DropDownListMultipleConfig {

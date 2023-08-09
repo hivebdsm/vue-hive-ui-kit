@@ -1,11 +1,11 @@
 import { computed, ComputedRef, Ref } from 'vue';
 import { DataContainer, DataContainerNode, DataContainerNodeWithRaw } from '../types/data-container';
 
-type DataType<T> = Array<T> | Record<string, T>;
-type DataRefType<T> = Ref<DataType<T>> | ComputedRef<DataType<T>>;
-type DataItemKey = string | number;
+export type DataType<T> = Array<T> | Record<string, T>;
+export type DataRefType<T> = Ref<DataType<T>> | ComputedRef<DataType<T>>;
+export type DataItemKey = string | number;
 
-type DataContainerConfig<T> = {
+export type DataContainerConfig<T> = {
   data: DataRefType<T>;
   valueField?: string;
   titleField?: string;

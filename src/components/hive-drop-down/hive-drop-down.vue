@@ -18,7 +18,7 @@ import {
 } from '@/common/mixin/emits';
 import { useOnMount } from '@/common/hooks/use-mount';
 import { useListMethods } from './hooks/use-list-methods';
-import { Value, Option,  } from '@/common/types/select';
+import { Value, Option } from '@/common/types/select';
 
 interface Props {
   options: Option[] | undefined;
@@ -172,7 +172,7 @@ $drop-down-padding: 0.5em 1em 0.5em 1em;
     border-color: var(--border-disabled, $border-disabled);
     opacity: 0.6;
     pointer-events: none;
-     cursor: pointer;
+    cursor: pointer;
   }
 
   &__wrap {

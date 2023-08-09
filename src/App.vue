@@ -4,6 +4,7 @@ import WidgetWrapper from '@/WidgetWrapper.vue';
 import { HiveButton, HiveDialog, HiveLoader, HiveTextarea } from '.';
 import HiveInput from './components/hive-input/hive-input.vue';
 import HiveDropDown from './components/hive-drop-down/hive-drop-down.vue';
+import HiveMultiselect from './components/hive-multiselect/hive-multiselect.vue';
 import { Option } from './common/types/select';
 import { useYearStore } from './stores/years';
 
@@ -11,7 +12,8 @@ const text = ref('text');
 const num = ref(0);
 const isOpenModal = ref(false);
 const dropdown = ref('dd');
-const dd3 = ref(0);
+const dd3 = ref(2023);
+const multiselect = ref([]);
 
 const handleText = () => {
   console.log('click');
@@ -35,60 +37,61 @@ let optionsTest: Option[] | undefined;
 
 setTimeout(() => {
   optionsTest = [
-  {
-    // key: 'key1',
-    // title: 'title3',
-    // value: 'value3',
-    valu: '2023',
-    titl: 't2023',
-    // key: '0',
-  },
-  {
-    // key: 'key2',
-    // title: 'title2',
-    // value: 'value2',
-    valu: '2022',
-    titl: 't2022',
-    // key: '1',
-  },
-  {
-    // key: 'key3',
-    // title: 'title1',
-    // value: 'value1',
-    valu: '2024',
-    titl: 't2024',
-    // key: '2',
-  },
-]
-})
+    {
+      // key: 'key1',
+      // title: 'title3',
+      // value: 'value3',
+      valu: '2023',
+      titl: 't2023',
+      // key: '0',
+    },
+    {
+      // key: 'key2',
+      // title: 'title2',
+      // value: 'value2',
+      valu: '2022',
+      titl: 't2022',
+      // key: '1',
+    },
+    {
+      // key: 'key3',
+      // title: 'title1',
+      // value: 'value1',
+      valu: '2024',
+      titl: 't2024',
+      // key: '2',
+    },
+  ];
+});
 
-const optionsObjectSort = //computed(() => optionsTest);
-[
-  {
-    // key: 'key1',
-    // title: 'title3',
-    // value: 'value3',
-    valu: '2023',
-    titl: 't2023',
-    // key: '0',
-  },
-  {
-    // key: 'key2',
-    // title: 'title2',
-    // value: 'value2',
-    valu: '2022',
-    titl: 't2022',
-    // key: '1',
-  },
-  {
-    // key: 'key3',
-    // title: 'title1',
-    // value: 'value1',
-    valu: '2024',
-    titl: 't2024',
-    // key: '2',
-  },
-]
+const optionsObjectSort =
+  //computed(() => optionsTest);
+  [
+    {
+      // key: 'key1',
+      // title: 'title3',
+      // value: 'value3',
+      valu: '2023',
+      titl: 't2023',
+      // key: '0',
+    },
+    {
+      // key: 'key2',
+      // title: 'title2',
+      // value: 'value2',
+      valu: '2022',
+      titl: 't2022',
+      // key: '1',
+    },
+    {
+      // key: 'key3',
+      // title: 'title1',
+      // value: 'value1',
+      valu: '2024',
+      titl: 't2024',
+      // key: '2',
+    },
+  ];
 
 const optionsObject = [
   {
@@ -132,6 +135,16 @@ const optionsObject = [
     value: 'value8',
   },
   {
+    key: 'key8',
+    title: 'title8',
+    value: 'value8',
+  },
+  {
+    key: 'key8',
+    title: 'title8',
+    value: 'value8',
+  },
+  {
     key: 'key9',
     title: 'title9',
     value: 'value9',
@@ -143,7 +156,7 @@ const yearList = computed(() => yearStore.years);
 
 onMounted(() => {
   yearStore.getYears();
-})
+});
 </script>
 
 <template>
@@ -169,7 +182,7 @@ onMounted(() => {
       <!-- Textarea -->
       <widget-wrapper title="Textarea">
         {{ text }}
-        <hive-textarea v-model="text" resize-direction="both" :style="{ width: '300px' }"  disabled />
+        <hive-textarea v-model="text" resize-direction="both" :style="{ width: '300px' }" />
       </widget-wrapper>
 
       <!-- Input -->
@@ -222,6 +235,23 @@ onMounted(() => {
         <!-- <hive-drop-down v-model="dd3" :options="optionsObjectSort" value-field="value" title-field="title" /> -->
         <!-- <hive-drop-down v-model="dd3" :options="optionsObjectSort" title-field="titl" value-field="valu" /> -->
         <hive-drop-down v-model="dd3" :options="yearList" title-field="title" value-field="value" with-null />
+        <!-- <hive-drop-down v-model="dropdown" :options="options" /> -->
+      </widget-wrapper>
+
+      <!-- <Multiselect -->
+      <widget-wrapper title="Multiselect">
+        {{ multiselect }}
+        <br />
+        <!-- <hive-drop-down v-model="dropdown" :options="optionsObject" :style="{ width: '300px' }" /> -->
+        <!-- <hive-drop-down v-model="dd3" :options="optionsObjectSort" value-field="value" title-field="title" /> -->
+        <!-- <hive-drop-down v-model="dd3" :options="optionsObjectSort" title-field="titl" value-field="valu" /> -->
+        <hive-multiselect
+          v-model="multiselect"
+          :options="yearList"
+          title-field="title"
+          value-field="value"
+          :disctinct="true"
+        />
         <!-- <hive-drop-down v-model="dropdown" :options="options" /> -->
       </widget-wrapper>
     </div>

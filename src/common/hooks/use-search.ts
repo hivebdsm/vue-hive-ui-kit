@@ -49,6 +49,8 @@ export const useSearch = <T>({
 
     const currentQuery = formatString(query.value);
 
+    console.log(items.value);
+
     const bufItems: (T | [string, T])[] = items.value instanceof Array ? [...items.value] : Object.entries(items.value);
 
     const filteredItems = bufItems.filter((item) => {
