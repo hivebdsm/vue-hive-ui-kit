@@ -1,6 +1,7 @@
 import { Ref, computed, ref, watch } from 'vue';
 import { InputExpose } from '@/components/hive-input/hive-input.vue';
 import { Value, Option } from '@/common/types/select';
+import { useDataContainer } from '@/common/hooks/use-data-container-update';
 
 export type ListMethodsConfig = {
   options: Option[] | undefined;
@@ -10,6 +11,8 @@ export type ListMethodsConfig = {
   fieldTitle: string;
   fieldValue: string;
 };
+
+type OptionType = string | number | Record<string, unknown>;
 
 export const useListMethods = ({
   options,
@@ -26,8 +29,13 @@ export const useListMethods = ({
   const searchQuery = ref('');
   const searchRef: Ref<InputExpose | null> = ref(null);
   const searchInput = computed(() => searchRef.value?.input);
-  const currentOptions = ref(new Map());
-  const filteredOptions = ref(new Map());
+  const currentOptions = ref(options as Array<OptionType>);
+  const filteredOptions = useDataContainer({
+    valueField: fieldValue,
+    titleField: fieldTitle,
+    data: currentOptions,
+  });
+
   const nullOption = ref({
     [fieldTitle]: nullTitle,
     [fieldValue]: null,
@@ -42,34 +50,34 @@ export const useListMethods = ({
     next: null,
   };
 
-  if (options) {
-    let prev;
+  // if (options) {
+  //   let prev;
 
-    if (withNull) {
-      filteredOptions.value.set('null', nullOption.value);
-      currentOptions.value.set('null', nullOption.value);
+  //   if (withNull) {
+  //     filteredOptions.value.set('null', nullOption.value);
+  //     currentOptions.value.set('null', nullOption.value);
 
-      prev = 'null';
-    }
+  //     prev = 'null';
+  //   }
 
-    for (const option of options) {
-      if (prev !== undefined) {
-        const temp = filteredOptions.value.get(prev);
-        filteredOptions.value.set(prev, { ...temp, next: option[fieldValue] });
-        filteredOptions.value.set(option[fieldValue], { ...option, prev, next: null });
-        currentOptions.value.set(prev, { ...temp, next: option[fieldValue] });
-        currentOptions.value.set(option[fieldValue], { ...option, prev, next: null });
-        prev = option[fieldValue];
-      } else {
-        filteredOptions.value.set(option[fieldValue], { ...option, prev: null, next: null });
-        currentOptions.value.set(option[fieldValue], { ...option, prev: null, next: null });
-        prev = option[fieldValue];
-      }
-    }
-  } else {
-    filteredOptions.value.set(String(modelValue), first);
-    currentOptions.value.set(String(modelValue), first);
-  }
+  //   for (const option of options) {
+  //     if (prev !== undefined) {
+  //       const temp = filteredOptions.value.get(prev);
+  //       filteredOptions.value.set(prev, { ...temp, next: option[fieldValue] });
+  //       filteredOptions.value.set(option[fieldValue], { ...option, prev, next: null });
+  //       currentOptions.value.set(prev, { ...temp, next: option[fieldValue] });
+  //       currentOptions.value.set(option[fieldValue], { ...option, prev, next: null });
+  //       prev = option[fieldValue];
+  //     } else {
+  //       filteredOptions.value.set(option[fieldValue], { ...option, prev: null, next: null });
+  //       currentOptions.value.set(option[fieldValue], { ...option, prev: null, next: null });
+  //       prev = option[fieldValue];
+  //     }
+  //   }
+  // } else {
+  //   filteredOptions.value.set(String(modelValue), first);
+  //   currentOptions.value.set(String(modelValue), first);
+  // }
 
   if (withNull) {
     current.value = nullOption.value;

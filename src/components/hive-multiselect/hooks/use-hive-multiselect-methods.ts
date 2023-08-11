@@ -1,4 +1,4 @@
-import type { ValueType } from '@/common/types/valueType';
+import type { Value } from '@/common/types/value';
 import type {
   ActiveValueType,
   CurrentValueType,
@@ -15,8 +15,8 @@ interface DropDownListMultipleMethodsConfig {
 }
 
 interface DropDownListMultipleMethodsExport {
-  addToCurrentValue: (value: ValueType, fromModelValue?: boolean) => void;
-  removeFromCurrentValue: (value: ValueType) => void;
+  addToCurrentValue: (value: Value, fromModelValue?: boolean) => void;
+  removeFromCurrentValue: (value: Value) => void;
   onBackspace: (e: KeyboardEvent) => void;
 }
 
@@ -28,8 +28,8 @@ export default function useHiveMultiselectMethods({
   filteredOptions,
   searchQuery,
 }: DropDownListMultipleMethodsConfig): DropDownListMultipleMethodsExport {
-  const addToCurrentValues = (value: ValueType, fromModelValue = false) => {
-    if (!filteredOptions.value[String(activeValue.value)] && !fromModelValue) {
+  const addToCurrentValues = (value: Value, fromModelValue = false) => {
+    if (!filteredOptions.value.get(activeValue.value) && !fromModelValue) {
       return;
     }
 
@@ -54,8 +54,8 @@ export default function useHiveMultiselectMethods({
         currentValue.value.push(value);
       }
     } else if (isAllowed) {
-      const prevNode = filteredOptions.value[String(value)].prev;
-      const nextNode = filteredOptions.value[String(value)].next;
+      const prevNode = filteredOptions.value.get(value)?.prev;
+      const nextNode = filteredOptions.value.get(value)?.next;
 
       currentValue.value.push(value);
       searchQuery.value = '';
@@ -70,7 +70,7 @@ export default function useHiveMultiselectMethods({
     }
   };
 
-  const removeFromCurrentValues = (value: ValueType) => {
+  const removeFromCurrentValues = (value: Value) => {
     currentValue.value.splice(currentValue.value.indexOf(value), 1);
     activeValue.value = value;
     // handleEvent(new Event('onAfterChange'), value);

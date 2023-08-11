@@ -1,6 +1,6 @@
 import { type ComputedRef, ref, type Ref, watch } from 'vue';
 import type { Value } from '@/common/types/value';
-import { useDataContainer, createUnknownNode } from '@/common/hooks/use-data-container';
+import { useDataContainer } from '@/common/hooks/use-data-container-update';
 import { DataContainer, DataContainerNode, DataContainerNodeWithRaw } from '@/common/types/data-container';
 import { useSearch } from '@/common/hooks/use-search';
 import useFilter, { CompareMode } from '@/common/hooks/use-filter';
@@ -56,7 +56,7 @@ export default function useHiveMultiselect({
   }
   const currentValue = ref(modelValue);
   const currentOptions = ref((options as Array<OptionType>)?.concat(modelValue));
-  const unfilteredOptions: ComputedRef<DataContainer<OptionType>> = useDataContainer({
+  const unfilteredOptions = useDataContainer({
     valueField,
     titleField,
     data: currentOptions,

@@ -154,6 +154,19 @@ const optionsObject = [
 const yearStore = useYearStore();
 const yearList = computed(() => yearStore.years);
 
+const newOptions = ref({
+  '74fd8aaa-e10a-4fd0-941b-6f6c7249003d': {
+    title: 'Российская Федерация',
+    value: '74fd8aaa-e10a-4fd0-941b-6f6c7249003d',
+    classifier_id: '2e72e478-2e35-437c-aeea-0d6da10138ae',
+  },
+  'cefa7ecc-9e64-425d-bfdb-2dc89a0c9c5f': {
+    title: 'Республика Беларусь',
+    value: 'cefa7ecc-9e64-425d-bfdb-2dc89a0c9c5f',
+    classifier_id: '2e72e478-2e35-437c-aeea-0d6da10138ae',
+  },
+});
+
 onMounted(() => {
   yearStore.getYears();
 });
@@ -234,6 +247,7 @@ onMounted(() => {
         <!-- <hive-drop-down v-model="dropdown" :options="optionsObject" :style="{ width: '300px' }" /> -->
         <!-- <hive-drop-down v-model="dd3" :options="optionsObjectSort" value-field="value" title-field="title" /> -->
         <!-- <hive-drop-down v-model="dd3" :options="optionsObjectSort" title-field="titl" value-field="valu" /> -->
+        <hive-drop-down v-model="dd3" :options="newOptions" title-field="title" value-field="value" with-null />
         <hive-drop-down v-model="dd3" :options="yearList" title-field="title" value-field="value" with-null />
         <!-- <hive-drop-down v-model="dropdown" :options="options" /> -->
       </widget-wrapper>

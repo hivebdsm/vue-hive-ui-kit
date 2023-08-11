@@ -66,7 +66,7 @@ export const useExpandListMethods = ({
 
     if (!opts.length) {
       activeValue.value = null;
-    } else if (!filteredOptions.value[String(activeValue.value)]) {
+    } else if (!filteredOptions.value.get(activeValue.value)) {
       activeValue.value = opts[0]?.value as Value;
     }
   };
@@ -74,7 +74,7 @@ export const useExpandListMethods = ({
   const setPrevActiveValue = () => {
     let node = null;
     try {
-      node = filteredOptions.value[String(activeValue.value)]?.prev;
+      node = filteredOptions.value.get(activeValue.value)?.prev;
     } catch (e) {
       setActiveValueToFirst();
       return;
@@ -88,7 +88,7 @@ export const useExpandListMethods = ({
   const setNextActiveValue = () => {
     let node = null;
     try {
-      node = filteredOptions.value[String(activeValue.value)]?.next;
+      node = filteredOptions.value.get(activeValue.value)?.next;
     } catch (e) {
       setActiveValueToFirst();
       return;

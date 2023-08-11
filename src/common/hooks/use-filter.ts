@@ -1,14 +1,12 @@
-import { computed, type ComputedRef, type Ref, ref } from "vue";
+import { computed, type ComputedRef, type Ref, ref } from 'vue';
 
 enum CompareMode {
   Exact,
   Substr,
 }
 
-type InputCollection<T> = T[] | Record<string, T>;
-type FieldCollection<T> = T extends Record<string, unknown>
-  ? Array<keyof T>
-  : never[];
+type InputCollection<T> = Map<T[] | string, T>;
+type FieldCollection<T> = T extends Record<string, unknown> ? Array<keyof T> : never[];
 type QueryCollection<T> = Array<T>;
 
 interface FilterConfig<T> {
@@ -57,11 +55,7 @@ export default function useFilter<T>({
     return input;
   };
 
-  const compareStrings = (
-    lhs: string,
-    rhs: string,
-    mode: CompareMode
-  ): boolean => {
+  const compareStrings = (lhs: string, rhs: string, mode: CompareMode): boolean => {
     switch (mode) {
       case CompareMode.Exact:
         return lhs === rhs;
@@ -80,7 +74,9 @@ export default function useFilter<T>({
       items.value instanceof Array
         ? [...items.value]
         : //@ts-ignore
-          Object.entries(items.value);
+          Array.from(items.value.entries());
+
+    console.log(items.value, bufItems);
 
     const filteredItems = bufItems.filter((item) => {
       const currentItem = item instanceof Array ? item[1] : item;
@@ -88,22 +84,14 @@ export default function useFilter<T>({
 
       for (const currentQuery of query.value) {
         if (!(currentItem instanceof Object)) {
-          if (
-            compareStrings(String(currentItem), currentQuery, compareMode.value)
-          ) {
+          if (compareStrings(String(currentItem), currentQuery, compareMode.value)) {
             isFitting = true;
             break;
           }
         }
 
         for (const field of fields) {
-          if (
-            compareStrings(
-              String(currentItem[field]),
-              currentQuery,
-              compareMode.value
-            )
-          ) {
+          if (compareStrings(String(currentItem[field]), currentQuery, compareMode.value)) {
             isFitting = true;
             break;
           }
@@ -115,10 +103,7 @@ export default function useFilter<T>({
 
     return items.value instanceof Array
       ? (filteredItems as T[])
-      : (Object.fromEntries(filteredItems as [string, T][]) as Record<
-          string,
-          T
-        >);
+      : (Object.fromEntries(filteredItems as [string, T][]) as Record<string, T>);
   });
 
   return {

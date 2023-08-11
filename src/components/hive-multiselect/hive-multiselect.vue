@@ -179,29 +179,31 @@ watch(
       @input="onInput(emit, $event as string)"
     />
     <div ref="menuRef" :class="{ visible: isExpanded, hidden: !isExpanded }" class="menu">
-      <hive-observable
-        v-for="option in filteredOptions"
-        :key="option.key"
-        :root="(menuRef as unknown as Record<string, any>)"
-        :threshold="0.2"
-        @appear="onAppear(option)"
-        @disappear="onDisappear(option)"
-      >
+      <transition name="fade" appear>
         <div
-          :class="{
-            'active selected': option.value === activeValue,
+          v-if="isExpanded"
+          class="hive-drop-down__menu"
+          :style="{
+            height: menuHeight,
           }"
-          :data-value="option.value"
-          class="item"
-          @click.prevent="addToCurrentValue(option.value)"
-          @mouseover="updateActiveValue(option.value)"
-          @mousedown.prevent
         >
-          <slot name="before" :value="option.raw?.raw" />
-          {{ String(option.title) }}
-          <slot name="after" :value="option.raw?.raw" />
+          <div
+            v-for="(item, i) in filteredOptions"
+            :key="i"
+            class="hive-drop-down__menu-item"
+            :class="{
+              selected: item[1][valueField] === activeValue || (item[1][valueField] === null && activeValue === 'null'),
+            }"
+            @click.prevent="addToCurrentValue(item[1][valueField])"
+            @mouseover="updateActiveValue(item[1][valueField])"
+            @mousedown.prevent
+          >
+            <slot name="before" :value="item?.raw?.raw" />
+            {{ item[1][titleField] }}
+            <slot name="after" :value="item?.raw?.raw" />
+          </div>
         </div>
-      </hive-observable>
+      </transition>
     </div>
   </div>
 </template>

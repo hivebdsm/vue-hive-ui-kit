@@ -18,4 +18,6 @@ export type DataContainerNode<T> = Record<string, unknown> & {
   next: DataContainerNode<T> | null;
 };
 
-export type DataContainer<T> = Record<string, DataContainerNode<T>>;
+export type DataItemKey = string | number | symbol;
+
+export type DataContainer<T> = Map<DataItemKey, DataContainerNode<T>>;

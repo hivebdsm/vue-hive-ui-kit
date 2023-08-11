@@ -76,11 +76,18 @@ const {
 
 watch(
   () => props.options,
-  () => {
-    configOptions.options = props.options;
-    currentOptions.value = useListMethods(configOptions).currentOptions.value;
-    filteredOptions.value = useListMethods(configOptions).filteredOptions.value;
-    current.value = useListMethods(configOptions).current.value;
+  (newValue) => {
+    if (Array.isArray(newValue)) {
+      if (props.withNull) {
+        newValue.unshift({
+          [props.titleField]: props.nullTitle,
+          [props.valueField ?? 'value']: null,
+        });
+      }
+      currentOptions.value = newValue;
+    } else {
+      currentOptions.value = newValue;
+    }
   },
 );
 </script>

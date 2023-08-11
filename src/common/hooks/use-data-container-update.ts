@@ -26,7 +26,7 @@ export type DataContainerNode<T> = Record<string, unknown> & {
   next: DataContainerNode<T> | null;
 };
 
-export type DataContainer<T> = Record<string, DataContainerNode<T>>;
+export type DataContainer<T> = Map<DataItemKey, DataContainerNode<T>>;
 
 export interface DataContainerConfig<T> {
   data: DataRefType<T>;
@@ -59,23 +59,24 @@ export const useDataContainer = <T>({ data, valueField, titleField }: DataContai
     return String(item);
   };
 
-  const deleteRecurringValues = (obj: DataType<T>) => {
-    if (Array.isArray(obj)) {
-      const filterObj: DataType<T> = [];
-      obj.filter((i) => {
-        filterObj.find((o) => o[titleField] === i[titleField] && o[valueField] === i[valueField]);
-      });
-    }
-  };
+  // const deleteRecurringValues = (obj: DataType<T>) => {
+  //   if (Array.isArray(obj)) {
+  //     const filterObj: DataType<T> = [];
+  //     obj.filter((i) => {
+  //       if (titleField && valueField) {
+  //         filterObj.find((o) => o[titleField] === i[titleField] && o[valueField] === i[valueField]);
+  //       }
+  //     });
+  //   }
+  // };
 
   return computed<DataContainer<T>>((): DataContainer<T> => {
-    const result: DataContainer<T> = {};
-    const dataCopy = JSON.parse(JSON.stringify(data.value)) as DataType<T>;
+    const result: DataContainer<T> = new Map();
 
     let prev: DataContainerNode<T> | null = null;
 
-    if (dataCopy) {
-      for (const [key, value] of Object.entries(dataCopy)) {
+    if (data.value) {
+      for (const [key, value] of Object.entries(data.value)) {
         const dataKey = getKey(value, key);
         const current: DataContainerNodeWithRaw<T> = {
           key: dataKey,
@@ -91,7 +92,7 @@ export const useDataContainer = <T>({ data, valueField, titleField }: DataContai
           prev.next = current as DataContainerNode<T>;
         }
 
-        result[dataKey] = current as DataContainerNode<T>;
+        result.set(getValue(value, key) as DataItemKey, current as DataContainerNode<T>);
         prev = current as DataContainerNode<T>;
       }
     }
