@@ -8,8 +8,10 @@ import HiveRadioGroup from './components/hive-radio-group/hive-radio-group.vue';
 import HiveCheckboxGroup from './components/hive-checkbox-group/hive-checkbox-group.vue';
 import HiveMultiselect from './components/hive-multiselect/hive-multiselect.vue';
 import HiveBadge from './components/hive-badge/hive-badge.vue';
+import hiveNotificationWrapper from './components/hive-notification/hive-notification-wrapper.vue';
 import { Option } from './common/types/select';
 import { useYearStore } from './stores/years';
+import useNotifications from './components/hive-notification/hooks/use-hive-hotification';
 
 const text = ref('text');
 const num = ref(0);
@@ -257,6 +259,17 @@ const handleSearch = (value: string) => {
   console.log('val', value);
 };
 
+const { createNotification } = useNotifications();
+
+const create = () =>
+  createNotification({
+    type: 'info',
+    title: 'Информация',
+    message: 'No messages available',
+    autoClose: true,
+    duration: 5,
+  });
+
 const log = (value: string) => {
   console.log(value);
 };
@@ -280,6 +293,7 @@ const log = (value: string) => {
         <hive-button />
         <hive-button :style="{ backgroundColor: 'red' }" @click.right.prevent="handleR" />
         <hive-button title="Classes" :class="'test'" @click="handleText" />
+        <hive-button title="Notify" :class="'test'" @click="create" />
       </widget-wrapper>
 
       <!-- Textarea -->
