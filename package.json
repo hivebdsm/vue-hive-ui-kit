@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "clean": "rm -rf dist",
+    "clean": "rimraf dist",
     "dev": "vite",
     "build": "vite build && vue-tsc --emitDeclarationOnly && mv dist/src dist/types",
     "preserve": "vite build",
@@ -38,6 +38,7 @@
     "@types/node": "^20.8.10",
     "@types/uuid": "^9.0.6",
     "@vitejs/plugin-vue": "^4.4.0",
+    "rimraf": "^5.0.5",
     "sass": "^1.69.5",
     "typescript": "^5.2.2",
     "vite": "^4.5.0",
