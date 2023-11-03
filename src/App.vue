@@ -28,6 +28,7 @@ import HiveGrid from './components/hive-grid/hive-grid.vue';
 import type { GridColumns } from './components/hive-grid/types';
 import HiveTreeView from './components/hive-tree-view/hive-tree-view.vue';
 import { VueComponent } from './common/types/value';
+import HiveGridRow from './components/hive-grid/hive-grid-row.vue';
 
 const text = ref('text');
 const num = ref(0);
@@ -399,13 +400,13 @@ const grid = ref(null);
 
 const currentTab = ref('1');
 
-const prevRow: Ref<VueComponent | null> = ref(null);
+const prevRow: Ref<InstanceType<typeof HiveGridRow> | null> = ref(null);
 
-const log = (row: Record<string, unknown>, rowRef: VueComponent | null) => {
+const log = (row: Record<string, unknown>, rowRef: VueComponent<typeof HiveGridRow> | null) => {
   if (rowRef && rowRef.style) {
     rowRef.style.background = 'red';
     if (prevRow.value?.style?.background) {
-      prevRow.value.style.background = null;
+      prevRow.value.style.background = 'inherit';
     }
     if (prevRow.value !== rowRef) {
       prevRow.value = rowRef;
