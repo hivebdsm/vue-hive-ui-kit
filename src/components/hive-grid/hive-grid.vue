@@ -74,7 +74,7 @@ type Emit = Mount &
   Keydown &
   Search<string> &
   QueryUpdate &
-  RowClick &
+  RowClick<typeof HiveGridRow> &
   AfterChange &
   AfterEdit &
   BeforeEdit &
@@ -171,8 +171,8 @@ const slots = useSlots();
 //   }
 // };
 
-const rowClicked = (row: Record<string, unknown>, rowRef: VueComponent | null) => {
-  onRowClick(emit, row, rowRef);
+const rowClicked = (row: Record<string, unknown>, rowRef: VueComponent<typeof HiveGridRow> | null) => {
+  onRowClick<typeof HiveGridRow>(emit, row, rowRef);
 };
 
 defineExpose({ items, grid });
