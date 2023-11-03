@@ -169,3 +169,9 @@ export type ChildrenShow = (e: 'childrenShow', id: string, show: boolean) => voi
 export const onChildrenShow = (emit: ChildrenShow, id: string, show: boolean) => {
   emit('childrenShow', id, show);
 };
+
+export type UpdatePage = (e: 'update:page', page: number) => void;
+
+export const onUpdatePage = (emit: UpdatePage, page: number) => {
+  emit('update:page', page);
+};
