@@ -1,4 +1,4 @@
-export interface Separator {
+export interface ContextMenuSeparator {
   separator: true;
 }
 
@@ -8,4 +8,4 @@ export interface ContextMenuItem {
   items?: ContextMenuItems;
 }
 
-export type ContextMenuItems = (ContextMenuItem | Separator)[];
+export type ContextMenuItems = (ContextMenuItem | ContextMenuSeparator)[];

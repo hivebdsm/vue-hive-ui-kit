@@ -29,6 +29,7 @@ import type { GridColumns } from './components/hive-grid/types';
 import HiveTreeView from './components/hive-tree-view/hive-tree-view.vue';
 import { VueComponent } from './common/types/value';
 import HiveGridRow from './components/hive-grid/hive-grid-row.vue';
+import hiveContextMenu from './components/hive-context-menu/hive-context-menu.vue';
 
 const text = ref('text');
 const num = ref(0);
@@ -620,6 +621,29 @@ const click = () => {
     },
   ];
 };
+
+const contextMenuItems: Ref<ContextMenuItems> = ref([
+  {
+    label: 'Скачать',
+    items: [
+      {
+        label: 'Скачать',
+      },
+      {
+        separator: true,
+      },
+      {
+        label: 'Удалить',
+      },
+    ],
+  },
+  {
+    separator: true,
+  },
+  {
+    label: 'Удалить',
+  },
+]);
 </script>
 
 <template>
@@ -828,6 +852,9 @@ const click = () => {
           :with-checkboxes="true"
           all-closed
         />
+      </widget-wrapper>
+      <widget-wrapper title="ContextMenu" style="height: 500px">
+        <hive-context-menu :items="contextMenuItems" />
       </widget-wrapper>
     </div>
   </div>
