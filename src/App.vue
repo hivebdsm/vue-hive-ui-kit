@@ -772,10 +772,23 @@ const click = () => {
           :style="{ width: '300px' }"
         />
       </widget-wrapper>
-      <widget-wrapper title="Tab">
+      <widget-wrapper title="Tab" style="max-height: 200px">
         {{ autocomplete }}
         <hive-tab-group v-model="tab">
-          <hive-tab name="first" id="1">asd</hive-tab>
+          <hive-tab name="first" id="1" style="height: 600px">
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+            <div style="">asd</div>
+          </hive-tab>
           <hive-tab name="second" id="2">cvb</hive-tab>
           <hive-tab name="third" id="3">fgh</hive-tab>
           <hive-tab name="fourth" id="4">ytiu</hive-tab>
