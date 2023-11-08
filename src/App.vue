@@ -30,6 +30,7 @@ import HiveTreeView from './components/hive-tree-view/hive-tree-view.vue';
 import { VueComponent } from './common/types/value';
 import HiveGridRow from './components/hive-grid/hive-grid-row.vue';
 import hiveContextMenu from './components/hive-context-menu/hive-context-menu.vue';
+import { ContextMenuItems } from './components/hive-context-menu/types';
 
 const text = ref('text');
 const num = ref(0);
@@ -417,6 +418,10 @@ const log = (row: Record<string, unknown>, rowRef: VueComponent<typeof HiveGridR
   }
 };
 
+const universalLog = (...args: unknown[]) => {
+  console.log(args);
+};
+
 const changeRows = () => {
   rows.value = [
     // { id:1, name:"John", age: 20, createdAt: '2018-02-18T00:00:43-05:00',score: 0.03343 },
@@ -624,16 +629,24 @@ const click = () => {
 
 const contextMenuItems: Ref<ContextMenuItems> = ref([
   {
-    label: 'Скачать',
+    label: 'Дейтсвия',
     items: [
       {
         label: 'Скачать',
-      },
-      {
-        separator: true,
+        function: () => {
+          console.log('вы кликлнули на скачать');
+        },
       },
       {
         label: 'Удалить',
+        items: [
+          {
+            label: 'Точно?',
+            function: () => {
+              console.log('вы кликлнули на скачать');
+            },
+          },
+        ],
       },
     ],
   },
@@ -641,7 +654,8 @@ const contextMenuItems: Ref<ContextMenuItems> = ref([
     separator: true,
   },
   {
-    label: 'Удалить',
+    label: 'Скрыть меню',
+    closeOnClick: true,
   },
 ]);
 </script>
@@ -854,7 +868,7 @@ const contextMenuItems: Ref<ContextMenuItems> = ref([
         />
       </widget-wrapper>
       <widget-wrapper title="ContextMenu" style="height: 500px">
-        <hive-context-menu :items="contextMenuItems" />
+        <hive-context-menu :items="contextMenuItems" @context-item-click="universalLog" />
       </widget-wrapper>
     </div>
   </div>

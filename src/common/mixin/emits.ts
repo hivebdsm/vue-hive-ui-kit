@@ -1,3 +1,4 @@
+import { ContextMenuItem } from '@/components/hive-context-menu/types';
 import { VueComponent } from '../types/value';
 import { ComponentPublicInstance } from 'vue';
 
@@ -123,9 +124,17 @@ export const onQueryUpdate = (emit: QueryUpdate, value: string) => {
   emit('queryUpdate', value);
 };
 
-export type RowClick<T = ComponentPublicInstance> = (e: 'rowClick', row: Record<string, unknown>, rowRef: VueComponent<T> | null) => void;
+export type RowClick<T = ComponentPublicInstance> = (
+  e: 'rowClick',
+  row: Record<string, unknown>,
+  rowRef: VueComponent<T> | null,
+) => void;
 
-export const onRowClick = <T = ComponentPublicInstance>(emit: RowClick<T>, row: Record<string, unknown>, rowRef: VueComponent<T> | null) => {
+export const onRowClick = <T = ComponentPublicInstance>(
+  emit: RowClick<T>,
+  row: Record<string, unknown>,
+  rowRef: VueComponent<T> | null,
+) => {
   emit('rowClick', row, rowRef);
 };
 
@@ -175,4 +184,16 @@ export type UpdatePage = (e: 'update:page', page: number) => void;
 
 export const onUpdatePage = (emit: UpdatePage, page: number) => {
   emit('update:page', page);
+};
+
+export type CloseContextMenu = (e: 'closeContextMenu') => void;
+
+export const onCloseContextMenu = (emit: CloseContextMenu) => {
+  emit('closeContextMenu');
+};
+
+export type ContextItemClick = (e: 'contextItemClick', item: ContextMenuItem) => void;
+
+export const onContextItemClick = (emit: ContextItemClick, item: ContextMenuItem) => {
+  emit('contextItemClick', item);
 };
