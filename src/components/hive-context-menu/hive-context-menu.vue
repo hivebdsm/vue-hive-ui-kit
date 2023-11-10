@@ -9,12 +9,12 @@ import {
   Mount,
   Unmount,
   Click,
-  CloseContextMenu,
-  ContextItemClick,
+  // CloseContextMenu,
+  // ContextItemClick,
   onClick,
-  onCloseContextMenu,
+  // onCloseContextMenu,
 } from '@/common/mixin/emits';
-import { onContextItemClick } from '../../common/mixin/emits';
+// import { onContextItemClick } from '../../common/mixin/emits';
 import { useIsOutOfBorders } from './hooks/use-is-out-of-borders';
 
 export interface Props extends CommonProps {
@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   onLeftSide: false,
 });
 
-type Emit = Mount & Unmount & Click & CloseContextMenu & ContextItemClick;
+type Emit = Mount & Unmount & Click; // & CloseContextMenu & ContextItemClick;
 const emit = defineEmits<Emit>();
 useOnMount(emit);
 
@@ -59,7 +59,7 @@ const showContextMenu = (e: PointerEvent) => {
 
 const hideContextMenu = () => {
   show.value = false;
-  onCloseContextMenu(emit);
+  // onCloseContextMenu(emit);
 };
 
 const outOfBorders = ref(props.onLeftSide);
@@ -96,7 +96,7 @@ const handleClick = (event: MouseEvent) => {
 };
 
 const handleContextItemClick = (item: ContextMenuItem) => {
-  onContextItemClick(emit, item);
+  // onContextItemClick(emit, item);
 };
 
 //TODO: fix children outOfBorder (maybe delete outOfBorder flag and change useOfBorders signutre)
