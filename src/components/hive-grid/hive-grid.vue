@@ -40,7 +40,7 @@ import HiveGridRow from './hive-grid-row.vue';
 import { VueComponent } from '../../../src/common/types/value';
 import type { GridColumns, GridConfig } from './types';
 import { filterItems } from './hooks/use-filter';
-import { sl } from 'date-fns/locale';
+import { CssClassConfig } from './types';
 
 interface Props extends CommonProps {
   dataItems: any[] | undefined;
@@ -54,6 +54,7 @@ interface Props extends CommonProps {
   filterFields?: string[];
   filterCaseSensitive?: boolean;
   page?: number;
+  rowCssClass?: CssClassConfig;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -162,15 +163,6 @@ watch(itemsLength, () => {
 
 const slots = useSlots();
 
-// console.log(slots);
-// const logEvent = (event: EventData) => {
-//   if (event.type === 'addTop') {
-//     addRow(true, 0);
-//   } else if (event.type === 'addBottom') {
-//     addRow(false, itemsLength.value - 1);
-//   }
-// };
-
 const rowClicked = (row: Record<string, unknown>, rowRef: VueComponent<typeof HiveGridRow> | null) => {
   onRowClick<typeof HiveGridRow>(emit, row, rowRef);
 };
@@ -196,13 +188,14 @@ defineExpose({ items, grid });
           :key="(item as any).id"
           :index="index"
           :columns="columns"
-          :item="(item as Record<string, unknown>)"
+          :row="(item as Record<string, unknown>)"
           :items-on-page="itemsOnPage"
           :current-page="currentPage"
           :show-add-buttons="showAddButtons"
           :color-alternation="colorAlternation"
           :add-row="addRow"
           :delete-row="deleteRow"
+          :css-class="rowCssClass"
           @row-click="rowClicked"
         >
           <template #="{ rowRef }">
@@ -228,17 +221,18 @@ defineExpose({ items, grid });
               </template>
             </hive-grid-ceil>
             <hive-grid-ceil
-              v-for="element in columns"
-              :key="element.field"
-              :text="(item as any)[element.field]?.text ?? (item as any)[element.field]"
-              :object="(item as Record<string, unknown>)"
-              :field="element.field"
-              :fields="element.fields"
-              :editable="element.editable"
-              :valueType="element.viewType === 'list' ? 'array' : 'string'"
-              :width="element.width"
-              :in-edit-mode="element.inEditMode ?? false"
+              v-for="column in columns"
+              :key="column.field"
+              :text="(item as any)[column.field]?.text ?? (item as any)[column.field]"
+              :row="(item as Record<string, unknown>)"
+              :field="column.field"
+              :fields="column.fields"
+              :editable="column.editable"
+              :valueType="column.viewType === 'list' ? 'array' : 'string'"
+              :width="column.width"
+              :in-edit-mode="column.inEditMode ?? false"
               :border-top="!colorAlternation"
+              :css-class="column.cssClass"
               @after-edit="onAfterEdit(emit, $event)"
               @after-change="onAfterChange(emit, $event)"
               @before-edit="onBeforeEdit(emit, $event)"
@@ -246,32 +240,32 @@ defineExpose({ items, grid });
             >
               <template #view="{ value, view, row, setTrueFlag }">
                 <slot
-                  :name="element.field ?? (element.fields ? element.fields[0] : '')"
-                  :item="(item as any)[element.field]"
+                  :name="column.field ?? (column.fields ? column.fields[0] : '')"
+                  :item="(item as any)[column.field]"
                   :row="row"
                   :setTrueFlag="setTrueFlag"
                   :row-ref="rowRef"
                 >
-                  <template v-if="element.viewType === 'list'">
-                    <div v-if="!element.separator">
+                  <template v-if="column.viewType === 'list'">
+                    <div v-if="!column.separator">
                       <div v-for="e in value">
                         {{ e }}
                       </div>
                     </div>
                     <div v-else>
-                      {{ value !== null && Array.isArray(value) ? value.join(element.separator) : value }}
+                      {{ value !== null && Array.isArray(value) ? value.join(column.separator) : value }}
                     </div>
                   </template>
-                  <template v-else-if="element.viewType === 'checkbox'">
+                  <template v-else-if="column.viewType === 'checkbox'">
                     <div style="width: 100%; display: flex; align-items: center; justify-content: center">
                       {{ value ? '✔️' : '❌' }}
                     </div>
                   </template>
-                  <template v-else-if="element.viewType === 'file'">
+                  <template v-else-if="column.viewType === 'file'">
                     <img :src="view" alt="Картинка" class="hive-image" />
                   </template>
-                  <template v-else-if="element.viewType === 'function'">
-                    <hive-button @click="element.function" />
+                  <template v-else-if="column.viewType === 'function'">
+                    <hive-button @click="column.function" />
                   </template>
                   <div v-else>
                     {{ view ? view : value }}
@@ -280,7 +274,7 @@ defineExpose({ items, grid });
               </template>
               <template #edit="{ value, update, isChangeAllowed, toggle, customChange, row, hideEdit, setTrueFlag }">
                 <slot
-                  :name="(element.field ?? (element.fields ? element.fields[0] : '')) + '-edit'"
+                  :name="(column.field ?? (column.fields ? column.fields[0] : '')) + '-edit'"
                   :value="value"
                   :update="update"
                   :is-change-allowed="isChangeAllowed"
@@ -288,12 +282,12 @@ defineExpose({ items, grid });
                   :customChange="customChange"
                   :row="row"
                   :hideEdit="hideEdit"
-                  :item="(item as any)[element.field]"
+                  :item="(item as any)[column.field]"
                   :setTrueFlag="setTrueFlag"
                   :row-ref="rowRef"
                 >
                   <hive-input
-                    v-if="element.editType === 'number'"
+                    v-if="column.editType === 'number'"
                     type="number"
                     @click.stop
                     :model-value="(value as number)"
@@ -301,16 +295,16 @@ defineExpose({ items, grid });
                     :is-invalid="!isChangeAllowed"
                   />
                   <hive-drop-down
-                    v-else-if="element.editType === 'dropdown-list'"
+                    v-else-if="column.editType === 'dropdown-list'"
                     :model-value="(value as Value)"
-                    :options="element.options"
+                    :options="column.options"
                     :is-invalid="!isChangeAllowed"
                     focusOnMount
                     @model-value-updated="update"
                     @focusout="toggle"
                   />
                   <hive-textarea
-                    v-else-if="element.editType === 'textarea'"
+                    v-else-if="column.editType === 'textarea'"
                     :model-value="(value as string)"
                     :is-invalid="!isChangeAllowed"
                     @input="update"
@@ -318,20 +312,20 @@ defineExpose({ items, grid });
                   />
                   <hive-autocomplete
                     style="width: fit-content"
-                    v-else-if="element.editType === 'autocomplete'"
+                    v-else-if="column.editType === 'autocomplete'"
                     @change="update($event)"
                     :model-value="(value as Value)"
-                    :options="element.options"
+                    :options="column.options"
                     :is-invalid="!isChangeAllowed"
                     @focusout="hideEdit"
                   />
                   <hive-multiselect
-                    v-else-if="element.editType === 'multiselect'"
+                    v-else-if="column.editType === 'multiselect'"
                     :model-value="(value as Value[])"
-                    :options="element.options"
+                    :options="column.options"
                   />
                   <div
-                    v-else-if="element.editType === 'checkbox'"
+                    v-else-if="column.editType === 'checkbox'"
                     style="width: 100%; display: flex; align-items: center; justify-content: center"
                   >
                     <hive-checkbox
@@ -344,7 +338,7 @@ defineExpose({ items, grid });
                   <hive-input
                     v-else
                     @click.stop
-                    :model-value="element.viewType === 'list' ? (value as unknown[]).join(',') : value as string"
+                    :model-value="column.viewType === 'list' ? (value as unknown[]).join(',') : value as string"
                     @input="update"
                     :is-invalid="!isChangeAllowed"
                     focus-on-mount

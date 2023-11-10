@@ -53,7 +53,9 @@ watch(isActive, () => {
 <style scoped lang="scss">
 .tab {
   width: 100%;
+  height: 100%;
   overflow: auto;
   background-color: transparent;
 }
 </style>
+computed
