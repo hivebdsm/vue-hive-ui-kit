@@ -243,7 +243,7 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
 
   &__wrap {
     position: relative;
-    width: 100%;
+    width: calc(100% - 2px);
     display: flex;
     background-color: none;
     cursor: default;
@@ -256,7 +256,7 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
     margin: 0 5px;
     box-sizing: border-box;
     flex-wrap: wrap;
-    width: 100%;
+    width: calc(100% - 45px);
 
     &-item {
       box-sizing: content-box;
@@ -274,6 +274,8 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
       align-items: center;
       gap: 5px;
       white-space: nowrap;
+      overflow-x: hidden;
+      width: 100%;
 
       &__img {
         width: 15px;

@@ -734,9 +734,9 @@ const click = () => {
         <!-- <hive-checkbox-group :options="maritalStatusList" v-model="check" title-field="title" value-field="id" /> -->
         <!-- <hive-checkbox :option="checkName" v-model="check" /> -->
       </widget-wrapper>
-      <widget-wrapper title="Multiselect">
+      <widget-wrapper title="Multiselect" >
         {{ checkbox }}
-        <hive-multiselect :options="yearList" v-model="multiselect" title-field="user_name" value-field="user_id" />
+        <hive-multiselect :options="yearList" v-model="multiselect" title-field="user_name" value-field="user_id" :style="{width: '250px'}" />
         <hive-textarea v-model="text" resize-direction="both" :style="{ width: '300px' }" disabled />
       </widget-wrapper>
       <widget-wrapper title="Autocompelte">
