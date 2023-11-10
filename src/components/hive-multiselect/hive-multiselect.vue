@@ -143,7 +143,7 @@ onMounted(() => {
             class="hive-multiselect__selected-item"
             @mousedown.stop.prevent
           >
-            {{ (currentOptions.get(value) && currentOptions.get(value)[titleField]) ?? currentOptions.get(value) }}
+            <div class="hive-multiselect__selected-text">{{ (currentOptions.get(value) && currentOptions.get(value)[titleField]) ?? currentOptions.get(value) }}</div>
             <img :src="DeleteIcon" class="hive-multiselect__selected-item__img" @click="changeValue(value)" />
           </div>
         </template>
@@ -275,7 +275,6 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
       gap: 5px;
       white-space: nowrap;
       overflow-x: hidden;
-      width: 100%;
 
       &__img {
         width: 15px;
@@ -286,6 +285,13 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
           cursor: pointer;
         }
       }
+    }
+
+    &-text {
+      display: flex;
+      width: calc(100% - 20px);
+       white-space: nowrap;
+       overflow-x: hidden;
     }
   }
 
