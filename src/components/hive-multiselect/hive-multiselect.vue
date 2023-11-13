@@ -23,7 +23,7 @@ import DeleteIcon from '@/components/hive-multiselect/assets/delete-icon.svg';
 
 export interface Props extends CommonProps {
   options: Options | undefined;
-  modelValue: Value[];
+  modelValue: Value[] | null;
   inline?: boolean;
   titleField?: string;
   valueField?: string;
@@ -79,6 +79,10 @@ const {
 } = useListMethods(configOptions);
 
 const changeValue = (value: Value) => {
+  if (currentValue.value === null) {
+    currentValue.value = [];
+  }
+
   if (!currentValue.value || !value || !Array.isArray(currentValue.value)) return;
 
   const includes = currentValue.value?.includes(value);
@@ -143,7 +147,9 @@ onMounted(() => {
             class="hive-multiselect__selected-item"
             @mousedown.stop.prevent
           >
-            <div class="hive-multiselect__selected-text">{{ (currentOptions.get(value) && currentOptions.get(value)[titleField]) ?? currentOptions.get(value) }}</div>
+            <div class="hive-multiselect__selected-text">
+              {{ (currentOptions.get(value) && currentOptions.get(value)[titleField]) ?? currentOptions.get(value) }}
+            </div>
             <img :src="DeleteIcon" class="hive-multiselect__selected-item__img" @click="changeValue(value)" />
           </div>
         </template>
@@ -290,8 +296,9 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
     &-text {
       display: flex;
       width: calc(100% - 20px);
-       white-space: nowrap;
-       overflow-x: hidden;
+      white-space: nowrap;
+      overflow: hidden;
+      white-space: break-spaces;
     }
   }
 
