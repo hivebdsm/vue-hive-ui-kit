@@ -23,7 +23,7 @@ import DeleteIcon from '@/components/hive-multiselect/assets/delete-icon.svg';
 
 export interface Props extends CommonProps {
   options: Options | undefined;
-  modelValue: Value[] | null;
+  modelValue: Value[];
   inline?: boolean;
   titleField?: string;
   valueField?: string;
@@ -53,7 +53,7 @@ useOnMount(emit);
 
 const configOptions = reactive({
   options: props.options,
-  modelValue: props.modelValue,
+  modelValue: props.modelValue || [],
   withUndefined: props.withUndefined,
   withNull: props.withNull,
   nullTitle: props.nullTitle,
@@ -86,6 +86,12 @@ const changeValue = (value: Value) => {
   if (!currentValue.value || !value || !Array.isArray(currentValue.value)) return;
 
   const includes = currentValue.value?.includes(value);
+  console.log('ccc', currentValue.value);
+  // const temp = []
+  // filteredOptions.value.forEach((el) => {
+  //   console.log('el', el);
+    
+  // })
 
   if (!includes) {
     currentValue.value?.push(value);
@@ -107,6 +113,7 @@ watch(
   () => props.modelValue,
   () => {
     currentValue.value = props.modelValue;
+    // console.log('www', filteredOptions.value, current.val);
   },
   { deep: true },
 );
@@ -125,7 +132,11 @@ watch(
 watch(
   currentValue,
   () => {
+    console.log('config', configOptions);
+    
     filteredOptions.value = useListMethods(configOptions).filteredOptions.value;
+    console.log('fw', filteredOptions.value);
+    
     setNextActiveValue();
   },
   { deep: true },
