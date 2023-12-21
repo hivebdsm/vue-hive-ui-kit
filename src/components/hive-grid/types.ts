@@ -36,7 +36,7 @@ export type GridColumns = {
   fields?: string[];
   title: string;
   width?: number;
-  editable?: boolean;
+  editable?: boolean | ((row: Record<string, unknown>) => boolean);
   editType?:
     | 'text'
     | 'number'
@@ -64,5 +64,6 @@ export type GridColumns = {
 export type GridConfig = {
   columns: GridColumns[];
   dataItems: ComputedRef<object[]>;
+  extensionFields?: string[];
   rowCssClass?: CssClassConfig;
 };

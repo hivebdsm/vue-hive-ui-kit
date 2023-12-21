@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, reactive, watch } from 'vue';
-import { CommonProps } from '@/common/mixin/props';
+import { CommonProps } from '@/common/types/props';
 import HiveInput from '@/components/hive-input/hive-input.vue';
 import {
   Focusout,
@@ -18,12 +18,12 @@ import {
 } from '@/common/mixin/emits';
 import { useOnMount } from '@/common/hooks/use-mount';
 import { useListMethods } from '@/common/hooks/use-list-methods';
-import { Options, Value } from '@/common/types/select';
+import type { Options } from '@/common/types/option';
+import { Value } from '@/common/types/select';
 
 export interface Props extends CommonProps {
   options: Options | undefined;
   modelValue: Value;
-  modelValueEventName?: string;
   disabled?: boolean;
   withUndefined?: boolean;
   withNull?: boolean;
@@ -88,9 +88,20 @@ watch(
   },
 );
 
+watch(
+  () => props.modelValue,
+  () => {
+    if (!Array.isArray(props.modelValue)) {
+      updateCurrentValue(props.modelValue);
+    }
+  },
+);
+
 onMounted(() => {
   if (props.focusOnMount) searchRef.value?.forceFocus();
 });
+
+defineExpose({ current });
 </script>
 
 <template>
@@ -107,7 +118,7 @@ onMounted(() => {
         @focusin="expand(), onFocusin(emit)"
         @focusout="collapse(), onFocusout(emit)"
         @keydown="onKeydown(emit, $event)"
-        @keydown.enter="updateCurrentValue(activeValue)"
+        @keydown.enter="updateCurrentValue(activeValue), onUpdateModelValue<Value>(emit, activeValue)"
         @keydown.esc="collapse"
         @keydown.up.prevent="setPrevActiveValue"
         @keydown.down.prevent="setNextActiveValue"

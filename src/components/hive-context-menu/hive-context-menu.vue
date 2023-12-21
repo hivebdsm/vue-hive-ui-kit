@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CommonProps } from '@/common/mixin/props';
+import { CommonProps } from '@/common/types/props';
 import { ContextMenuItem, ContextMenuItems } from './types';
 import HiveContextMenuItem from './hive-context-menu-item.vue';
 import { getCurrentInstance, ref, onMounted, reactive, onUnmounted, watch } from 'vue';
@@ -9,13 +9,13 @@ import {
   Mount,
   Unmount,
   Click,
-  // CloseContextMenu,
-  // ContextItemClick,
+  CloseContextMenu,
+  ContextItemClick,
   onClick,
-  // onCloseContextMenu,
+  onCloseContextMenu,
 } from '@/common/mixin/emits';
-// import { onContextItemClick } from '../../common/mixin/emits';
-import { useIsOutOfBorders } from './hooks/use-is-out-of-borders';
+import { onContextItemClick } from '../../common/mixin/emits';
+import { useIsOutOfBordersWidth, useIsOutOfBordersHeight } from './hooks/use-is-out-of-borders';
 
 export interface Props extends CommonProps {
   items: ContextMenuItems | undefined;
@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   onLeftSide: false,
 });
 
-type Emit = Mount & Unmount & Click; // & CloseContextMenu & ContextItemClick;
+type Emit = Mount & Unmount & Click & CloseContextMenu & ContextItemClick;
 const emit = defineEmits<Emit>();
 useOnMount(emit);
 
@@ -50,31 +50,33 @@ const position = reactive({
   top: props.top,
 });
 
-const showContextMenu = (e: PointerEvent) => {
+const showContextMenu = async (e: PointerEvent) => {
   e.preventDefault();
   show.value = true;
   position.left = e.pageX;
   position.top = e.pageY;
-};
-
-const hideContextMenu = () => {
-  show.value = false;
-  // onCloseContextMenu(emit);
-};
-
-const outOfBorders = ref(props.onLeftSide);
-
-watch(show, async () => {
   await nextTick();
   if (contextMenu.value && show.value) {
-    if (useIsOutOfBorders(contextMenu.value)) {
+    useIsOutOfBordersHeight(contextMenu.value);
+    if (useIsOutOfBordersWidth(contextMenu.value)) {
       outOfBorders.value = true;
       position.left = position.left - contextMenu.value.offsetWidth;
+    }
+    if (useIsOutOfBordersHeight(contextMenu.value)) {
+      position.top = position.top - contextMenu.value.offsetHeight;
+      outOfBorders.value = true;
     } else {
       outOfBorders.value = false;
     }
   }
-});
+};
+
+const hideContextMenu = () => {
+  show.value = false;
+  onCloseContextMenu(emit);
+};
+
+const outOfBorders = ref(props.onLeftSide);
 
 onMounted(() => {
   parentNode.value = instance?.parent?.vnode.el;
@@ -96,7 +98,7 @@ const handleClick = (event: MouseEvent) => {
 };
 
 const handleContextItemClick = (item: ContextMenuItem) => {
-  // onContextItemClick(emit, item);
+  onContextItemClick(emit, item);
 };
 
 //TODO: fix children outOfBorder (maybe delete outOfBorder flag and change useOfBorders signutre)

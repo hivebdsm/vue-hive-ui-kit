@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type Ref, ref, watch, reactive } from 'vue';
-import { CommonProps } from '@/common/mixin/props';
+import { CommonProps } from '@/common/types/props';
 import { TreeView, TreeImg } from './hive-tree-view-type';
 import { Unmount, Mount } from '@/common/mixin/emits';
 import { useOnMount } from '@/common/hooks/use-mount';

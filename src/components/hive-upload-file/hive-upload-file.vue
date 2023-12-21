@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type Ref, ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
-import { CommonProps } from '@/common/mixin/props';
+import { CommonProps } from '@/common/types/props';
 import {
   type Mount,
   type Unmount,
@@ -25,6 +25,7 @@ export interface Props extends CommonProps {
   fileTypes?: string;
   title?: string;
   initialFiles?: string[] | null;
+  multiple?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -32,6 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   fileTypes: '',
   title: 'Нажмите сюда чтобы выбрать файлы или перетащите их',
   initialFiles: null,
+  multiple: false,
 });
 
 type Emit = Mount & Unmount & Focusout & Focusin & Change<string> & FileAdd & FileRemove;
@@ -65,6 +67,10 @@ function onInputChange(e: Event) {
   //@ts-ignore
   e.target.value = null;
 }
+
+defineExpose({
+  files,
+});
 </script>
 
 <template>
@@ -89,6 +95,7 @@ function onInputChange(e: Event) {
           @focusin="onFocusin(emit)"
           @focusout="onFocusout(emit)"
           :accept="fileTypes !== ' ' ? fileTypes : '*'"
+          :multiple="multiple"
         />
       </label>
       <ul class="image-list" v-show="files.length !== 0 || initialFilesRef.length !== 0">

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CommonProps } from '@/common/mixin/props';
+import { CommonProps } from '@/common/types/props';
 import { ContextMenuSeparator, ContextMenuItem } from './types';
 import { computed, ref, onMounted, getCurrentInstance, reactive, watch } from 'vue';
 import { useIsSeparator } from './hooks/use-is-separator';
@@ -8,10 +8,10 @@ import hiveContextMenu from './hive-context-menu.vue';
 import { Click, Mount, Unmount } from '@/common/mixin/emits';
 import { useOnMount } from '@/common/hooks/use-mount';
 import {
-  // CloseContextMenu,
-  // onCloseContextMenu,
-  // onContextItemClick,
-  // ContextItemClick,
+  CloseContextMenu,
+  onCloseContextMenu,
+  onContextItemClick,
+  ContextItemClick,
   onClick,
 } from '../../common/mixin/emits';
 
@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   outOfBorders: false,
 });
 
-type Emit = Mount & Unmount & Click; //& CloseContextMenu & ContextItemClick;
+type Emit = Mount & Unmount & Click & CloseContextMenu & ContextItemClick;
 const emit = defineEmits<Emit>();
 useOnMount(emit);
 
@@ -67,9 +67,9 @@ const handleClick = (event: MouseEvent) => {
       (props.item as ContextMenuItem).function!();
     }
     if ((props.item as ContextMenuItem).closeOnClick) {
-      // onCloseContextMenu(emit);
+      onCloseContextMenu(emit);
     }
-    // onContextItemClick(emit, props.item as ContextMenuItem);
+    onContextItemClick(emit, props.item as ContextMenuItem);
     onClick(emit, event);
   }
 };
@@ -81,7 +81,7 @@ const handleClick = (event: MouseEvent) => {
     v-else-if="isItem"
     class="item"
     @mouseover="showChildren = true"
-    @mouseleave="showChildren = true"
+    @mouseleave="showChildren = false"
     @click="handleClick"
     :class="{'has-children': (item as ContextMenuItem).items !== undefined}"
   >
@@ -94,11 +94,11 @@ const handleClick = (event: MouseEvent) => {
       :left="position.left"
       :top="position.top"
       @click="onClick(emit, $event)"
+      @close-context-menu="onCloseContextMenu(emit)"
+      @context-item-click="onContextItemClick(emit, $event)"
       :on-left-side="outOfBorders"
       show-on-mount
-      />
-      <!-- @close-context-menu="onCloseContextMenu(emit)"
-      @context-item-click="onContextItemClick(emit, $event)" -->
+    />
   </div>
 </template>
 

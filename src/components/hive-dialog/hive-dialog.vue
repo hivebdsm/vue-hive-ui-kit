@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CommonProps } from '@/common/mixin/props';
+import { CommonProps } from '@/common/types/props';
 import { Mount, Unmount, Update, onUpdateModelValue } from '@/common/mixin/emits';
 import { useOnMount } from '@/common/hooks/use-mount';
 import { mergeProps, nextTick, ref, watch } from 'vue';
@@ -13,7 +13,7 @@ export interface Props extends CommonProps {
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
   maskBackground: '#262d34ad',
-  zIndex: 10000,
+  zIndex: 1000,
 });
 
 type Emit = Mount & Unmount & Update<boolean>;
@@ -107,6 +107,8 @@ $dialog-width-min: 100px;
     top: calc(-50vh + 50%);
     bottom: calc(-50vh + 50%);
     margin: auto;
+    display: flex;
+    flex-direction: column;
   }
 }
 

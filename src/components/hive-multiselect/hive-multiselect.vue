@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, reactive, watch } from 'vue';
-import { CommonProps } from '@/common/mixin/props';
+import { CommonProps } from '@/common/types/props';
 import HiveInput from '@/components/hive-input/hive-input.vue';
 import {
   Focusout,
@@ -17,13 +17,14 @@ import {
   onSearch,
 } from '@/common/mixin/emits';
 import { useOnMount } from '@/common/hooks/use-mount';
-import { Options, Value } from '@/common/types/select';
+import type { Options } from '@/common/types/option';
+import { Value } from '@/common/types/select';
 import { useListMethods } from '@/common/hooks/use-list-methods';
 import DeleteIcon from '@/components/hive-multiselect/assets/delete-icon.svg';
 
 export interface Props extends CommonProps {
   options: Options | undefined;
-  modelValue: Value[] | null;
+  modelValue: Value[];
   inline?: boolean;
   titleField?: string;
   valueField?: string;
@@ -55,7 +56,7 @@ const configOptions = reactive({
   options: props.options,
   modelValue: props.modelValue,
   withUndefined: props.withUndefined,
-  withNull: props.withNull,
+  withNull: false,
   nullTitle: props.nullTitle,
   fieldTitle: props.titleField,
   fieldValue: props.valueField,
@@ -79,10 +80,6 @@ const {
 } = useListMethods(configOptions);
 
 const changeValue = (value: Value) => {
-  if (currentValue.value === null) {
-    currentValue.value = [];
-  }
-
   if (!currentValue.value || !value || !Array.isArray(currentValue.value)) return;
 
   const includes = currentValue.value?.includes(value);
@@ -147,9 +144,7 @@ onMounted(() => {
             class="hive-multiselect__selected-item"
             @mousedown.stop.prevent
           >
-            <div class="hive-multiselect__selected-text">
-              {{ (currentOptions.get(value) && currentOptions.get(value)[titleField]) ?? currentOptions.get(value) }}
-            </div>
+            {{ (currentOptions.get(value) && currentOptions.get(value)[titleField]) ?? currentOptions.get(value) }}
             <img :src="DeleteIcon" class="hive-multiselect__selected-item__img" @click="changeValue(value)" />
           </div>
         </template>
@@ -249,7 +244,7 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
 
   &__wrap {
     position: relative;
-    width: calc(100% - 2px);
+    width: 100%;
     display: flex;
     background-color: none;
     cursor: default;
@@ -262,7 +257,7 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
     margin: 0 5px;
     box-sizing: border-box;
     flex-wrap: wrap;
-    width: calc(100% - 45px);
+    width: 100%;
 
     &-item {
       box-sizing: content-box;
@@ -279,8 +274,7 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
       display: flex;
       align-items: center;
       gap: 5px;
-      white-space: nowrap;
-      overflow-x: hidden;
+      white-space: break-spaces;
 
       &__img {
         width: 15px;
@@ -291,14 +285,6 @@ $multiselect-padding: 0.5em 1em 0.5em 1em;
           cursor: pointer;
         }
       }
-    }
-
-    &-text {
-      display: flex;
-      width: calc(100% - 20px);
-      white-space: nowrap;
-      overflow: hidden;
-      white-space: break-spaces;
     }
   }
 
